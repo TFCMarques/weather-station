@@ -18,18 +18,34 @@
 #pragma config CP = OFF // Flash Program Memory Code Protection bit
 
 int main(void) {
-    char aux[50];
-    
+    char t[50];
+    char h[50];
+    char w[50];
+
     initUART();
+    sendStringUART("UART initialized..."); addNewline();
     initADC();
+    sendStringUART("ADC initialized..."); addNewline();
     
-    while (1) {
-        sendStringUART("Hello World");
-        addNewline();
-        int temp = readADC(AN2_TEMPERATURE);
-        sprintf(aux, "Temperature value: %d", temp);
-        sendStringUART(aux);
-        addNewline();
+    while (TRUE) {
+        if(!RB3_BUTTON) {
+            int temperature = readADC(AN2_TEMPERATURE);
+            sprintf(t, "Temperature value: %d", temperature);
+            sendStringUART(t); addNewline();
+        }
+        
+        if(!RB4_BUTTON) {
+            int humidity = readADC(AN1_HUMIDITY);
+            sprintf(h, "Humidity value: %d", humidity);
+            sendStringUART(h); addNewline();
+        }
+        
+        if(!RB5_BUTTON) {
+            int wind = 123123;
+            sprintf(w, "Wind value: %d", wind);
+            sendStringUART(w); addNewline();
+        }
+        
         sleep(1000);
     }
 }
