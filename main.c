@@ -7,6 +7,7 @@
 #include "adc.h"
 #include "uart.h"
 #include "commons.h"
+#include "screen.h"
 
 #pragma config FOSC = HS // Oscillator Selection bits (HS oscillator)
 #pragma config WDTE = OFF // Watchdog Timer Enable bit
@@ -18,34 +19,28 @@
 #pragma config CP = OFF // Flash Program Memory Code Protection bit
 
 int main(void) {
-    char t[50];
-    char h[50];
-    char w[50];
-
     initUART();
-    sendStringUART("UART initialized..."); addNewline();
     initADC();
-    sendStringUART("ADC initialized..."); addNewline();
+    sendStringUART("Init UART");
+    lcd_init();
+    sendStringUART("Init LCD");
+    lcd_cmd(L_NCR);
     
-    while (TRUE) {
-        if(!RB3_BUTTON) {
-            int temperature = readADC(AN2_TEMPERATURE);
-            sprintf(t, "Temperature value: %d", temperature);
-            sendStringUART(t); addNewline();
-        }
-        
-        if(!RB4_BUTTON) {
-            int humidity = readADC(AN1_HUMIDITY);
-            sprintf(h, "Humidity value: %d", humidity);
-            sendStringUART(h); addNewline();
-        }
-        
-        if(!RB5_BUTTON) {
-            int wind = 123123;
-            sprintf(w, "Wind value: %d", wind);
-            sendStringUART(w); addNewline();
-        }
-        
-        sleep(1000);
+    lcd_cmd(L_CLR);
+    lcd_cmd(L_L1);
+    lcd_str("   LCD Test");
+  
+    for(int i=32;i>=32;i++) {
+        if((i%16) == 0)lcd_cmd(L_L2); 
+        lcd_dat(i);
+        sleep(50);
     }
+    
+    sleep(100);
+    lcd_cmd(L_CLR);
+    lcd_cmd(L_L1);
+    lcd_str("   LCD Test");
+    lcd_cmd(L_L2);
+    lcd_str("       Ok");
+    sleep(500);
 }
