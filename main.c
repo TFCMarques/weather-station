@@ -6,8 +6,8 @@
 // Custom Libraries
 #include "adc.h"
 #include "uart.h"
+#include "pwm.h"
 #include "commons.h"
-#include "screen.h"
 
 #pragma config FOSC = HS // Oscillator Selection bits (HS oscillator)
 #pragma config WDTE = OFF // Watchdog Timer Enable bit
@@ -18,29 +18,39 @@
 #pragma config WRT = OFF // Flash Program Memory Write Enable bits
 #pragma config CP = OFF // Flash Program Memory Code Protection bit
 
-int main(void) {
+int main() {
+    int counter = 0;
     initUART();
     initADC();
-    sendStringUART("Init UART");
-    lcd_init();
-    sendStringUART("Init LCD");
-    lcd_cmd(L_NCR);
+    initPWM();
     
-    lcd_cmd(L_CLR);
-    lcd_cmd(L_L1);
-    lcd_str("   LCD Test");
-  
-    for(int i=32;i>=32;i++) {
-        if((i%16) == 0)lcd_cmd(L_L2); 
-        lcd_dat(i);
-        sleep(50);
+    sendStringUART("Initializations complete.");
+    
+    startPWM();
+    sendStringUART("Started PWM.");
+    
+    while(TRUE){
+        if (SPEEDMETER == 1) {
+            counter++;
+        }
+        
+        if (!RB3_BUTTON) {
+            char aux1[50];
+            int windPot = readADC(AN0_WIND);
+            sprintf(aux1, "AN0 value: %d", windPot);
+            sendStringUART(aux1);
+            int dutyCycle = setDutyCyclePWM(windPot);
+            char aux2[50];
+            sprintf(aux2, "Setting duty cycle with value: %d", dutyCycle);
+            sendStringUART(aux2);
+        }
+        
+        if (!RB4_BUTTON) {
+            stopPWM();
+            sendStringUART("Stopped PWM.");
+            char aux3[50];
+            sprintf(aux3, "Number of rotations during execution: %d", counter);
+            sendStringUART(aux3);
+        }
     }
-    
-    sleep(100);
-    lcd_cmd(L_CLR);
-    lcd_cmd(L_L1);
-    lcd_str("   LCD Test");
-    lcd_cmd(L_L2);
-    lcd_str("       Ok");
-    sleep(500);
 }

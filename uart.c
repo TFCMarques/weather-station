@@ -28,6 +28,7 @@ void sendCharUART(char aux) {
 
 void sendStringUART(const char* string) {
     while(*string) sendCharUART(*string++);
+    addNewline();
 }
 
 char getCharUART() {

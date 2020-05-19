@@ -23,8 +23,7 @@
 
 // Input Control
 #define HEATING_RESISTANCE PORTCbits.RC5
-#define FAN_CONTROL PORTCbits.RC2
-#define SPEEDMETER PORCbits.RC0
+#define SPEEDMETER PORTCbits.RC0
 
 // Analog Channels with ADON
 #define AN0_WIND 0x01
