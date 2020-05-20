@@ -8,6 +8,7 @@
 #include "uart.h"
 #include "pwm.h"
 #include "commons.h"
+#include "timers.h"
 
 #pragma config FOSC = HS // Oscillator Selection bits (HS oscillator)
 #pragma config WDTE = OFF // Watchdog Timer Enable bit
@@ -18,22 +19,22 @@
 #pragma config WRT = OFF // Flash Program Memory Write Enable bits
 #pragma config CP = OFF // Flash Program Memory Code Protection bit
 
+int counterTimer0 = 0;
+long speed = 0;
+
 int main() {
-    int counter = 0;
     initUART();
     initADC();
     initPWM();
     
-    sendStringUART("Initializations complete.");
-    
     startPWM();
-    sendStringUART("Started PWM.");
+    initInterrupFlags();
+    initTimer0();
+    initTimer1();
     
-    while(TRUE){
-        if (SPEEDMETER == 1) {
-            counter++;
-        }
-        
+    setDutyCyclePWM(512);
+    
+    while(TRUE) {        
         if (!RB3_BUTTON) {
             char aux1[50];
             int windPot = readADC(AN0_WIND);
@@ -44,13 +45,24 @@ int main() {
             sprintf(aux2, "Setting duty cycle with value: %d", dutyCycle);
             sendStringUART(aux2);
         }
+    }
+}
+
+void __interrupt() isr() {
+    char aux[30];
+
+    while(!TMR0IF);
+    TMR0IF = 0;
+    counterTimer0++;
+
+    if (counterTimer0 == 125) {
+        counterTimer0 = 0;
         
-        if (!RB4_BUTTON) {
-            stopPWM();
-            sendStringUART("Stopped PWM.");
-            char aux3[50];
-            sprintf(aux3, "Number of rotations during execution: %d", counter);
-            sendStringUART(aux3);
-        }
+        speed = ((TMR1H<<8) + TMR1L);
+        
+        sprintf(aux, "Fan speed (rps): %d", speed);
+        sendStringUART(aux);
+        TMR1 = 0;
+        TMR0 = 0;
     }
 }

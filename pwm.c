@@ -4,8 +4,9 @@
 #include "uart.h"
 
 void initPWM() {
-    CCP1CON = 0x00;
+    CCP1CON = 0x0C;
     
+    TRISCbits.TRISC0 = 1;
     TRISCbits.TRISC2 = 1;
     TRISDbits.TRISD5 = 1;
     
@@ -25,11 +26,6 @@ void startPWM() {
     CCP1CON=0x0F;
 
     T2CONbits.TMR2ON = 1;
-
-    PIR1bits.TMR2IF = 0;
-    while(PIR1bits.TMR2IF == 0);
-    PIR1bits.TMR2IF = 0;
-    while(PIR1bits.TMR2IF == 0);
 }
 
 void stopPWM() {

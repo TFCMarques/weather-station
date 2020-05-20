@@ -24,7 +24,7 @@
       <itemPath>adc.c</itemPath>
       <itemPath>pwm.c</itemPath>
       <itemPath>measures.c</itemPath>
-      <itemPath>timer.c</itemPath>
+      <itemPath>timers.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
