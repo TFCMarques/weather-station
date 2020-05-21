@@ -17,7 +17,6 @@ int checkPassword() {
     
     addNewline();
     receivedPassword[4] = '\0';
-    sendStringUART(receivedPassword);
     
     if (strcmp(receivedPassword, systemPassword) == 0) {
         sendStringUART("Correct password.");

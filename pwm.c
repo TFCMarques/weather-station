@@ -24,6 +24,8 @@ void startPWM() {
     TRISDbits.TRISD5 = 0;
 
     CCP1CON=0x0F;
+    
+    CCPR1L = 50;
 
     T2CONbits.TMR2ON = 1;
 }
