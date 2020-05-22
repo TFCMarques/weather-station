@@ -1,10 +1,11 @@
 #include <xc.h>
-#include "keypad.h"
-#include "commons.h"
-#include "uart.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "keypad.h"
+#include "commons.h"
+#include "uart.h"
 
 void initKeypad() {
     COLUMN1 = 0;

@@ -34,7 +34,6 @@ void stopPWM() {
     CCPR1L = 0;
 }
 
-int setDutyCyclePWM(long pot) {
+void setDutyCyclePWM(long pot) {
     CCPR1L = pot * 100 / 1023;
-    return CCPR1L;
 }

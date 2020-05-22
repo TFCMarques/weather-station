@@ -2,8 +2,7 @@
 #include "commons.h"
 
 void sleep(int miliseconds) {
-    int i, j;
-    for(i=0; i<miliseconds; i++) {
-        for(j=0; j<100;j++);
+    for(int i = 0; i < miliseconds; i++) {
+        for(int j = 0; j < 100; j++);
     }
 }

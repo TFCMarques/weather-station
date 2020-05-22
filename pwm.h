@@ -4,7 +4,7 @@
 void initPWM();
 void startPWM();
 void stopPWM();
-int setDutyCyclePWM(long pot);
+void setDutyCyclePWM(long pot);
 
 #endif	/* PWM_H */
 

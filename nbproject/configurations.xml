@@ -12,7 +12,6 @@
       <itemPath>timers.h</itemPath>
       <itemPath>keypad.h</itemPath>
       <itemPath>password.h</itemPath>
-      <itemPath>password.c</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -29,6 +28,7 @@
       <itemPath>measures.c</itemPath>
       <itemPath>timers.c</itemPath>
       <itemPath>keypad.c</itemPath>
+      <itemPath>password.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

@@ -1,10 +1,11 @@
 #ifndef MEASURES_H
 #define	MEASURES_H
 
-void setWindSpeed();
-void measureWindSpeed();
-void measureHumidity();
-void measureTemperature();
+int getWindPWM();
+void setWindSpeed(int windPot);
+int measureWindSpeed();
+int measureHumidity();
+int measureTemperature();
 void changeTemperature();
 
 #endif	/* MEASURES_H */

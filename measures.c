@@ -7,33 +7,24 @@
 #include "adc.h"
 #include "pwm.h"
 
-void setWindSpeed() {
-    char dutyCycle[30];
-    int windPot = readADC(AN0_WIND);
-    int dcRate = setDutyCyclePWM(windPot);
-    sprintf(dutyCycle, "Duty Cycle: %d", dcRate);
-    sendStringUART(dutyCycle);
+int getWindPWM() {
+    return readADC(AN0_WIND);
 }
 
-void measureWindSpeed() {
-    char speed[30];
-    int rpm = ((TMR1H<<8) + TMR1L) / 7;
-    sprintf(speed, "Wind (RPM): %d", rpm);
-    sendStringUART(speed);
+void setWindSpeed(int windPot) {
+    setDutyCyclePWM(windPot);
 }
 
-void measureHumidity() {
-    char humidity[30];
-    int humidityLevel = readADC(AN1_HUMIDITY) / (1023 * 0.01);
-    sprintf(humidity, "Humidity (percentage): %d", humidityLevel);
-    sendStringUART(humidity);
+int measureWindSpeed() {
+    return ((TMR1H<<8) + TMR1L);
 }
 
-void measureTemperature() {
-    char temperature[30];
-    int tempValue = 5 * readADC(AN2_TEMPERATURE) * 100 / 1023;
-    sprintf(temperature, "Temperature (Celcius): %d", tempValue);
-    sendStringUART(temperature);
+int measureHumidity() {
+    return readADC(AN1_HUMIDITY);
+}
+
+int measureTemperature() {
+    return readADC(AN2_TEMPERATURE);
 }
 
 void changeTemperature() {

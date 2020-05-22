@@ -22,37 +22,34 @@
 #pragma config CP = OFF // Flash Program Memory Code Protection bit
 
 int counterTimer0 = 0;
-long speed = 0;
 
 int main() {
-    int passwordOK = FALSE;
+    //int passwordOK = FALSE;
     
     initUART();
     initADC();
     initPWM();
-    
-    sendStringUART("Finished initializations.");
-    sleep(100);
-    
-    //    do {
-    //        sendStringUART("Insert Password:");
-    //        passwordOK = checkPassword();
-    //        sleep(100);
-    //    } while(!passwordOK);
-    
     startPWM();
+    
+    //do {
+    //    sendStringUART("Insert Password:");
+    //    passwordOK = checkPassword();
+    //    sleep(100);
+    //} while(!passwordOK);
+    
     initInterrupFlags();
     initTimer0();
     initTimer1();
     
-    sendStringUART("Started PWM and initialized timers.");
-    sleep(100);
-    
     while(TRUE) {
-        if(!RB3_BUTTON) {
-            while(!RB3_BUTTON);
-            setWindSpeed();
-        }
+        //if(!RB3_BUTTON) {
+        //    while(!RB3_BUTTON);
+        //    int currentW = getWindPWM();
+        //    setWindSpeed(currentW);
+        //}
+        
+        int currentW = getWindPWM();
+        setWindSpeed(currentW);
         
         if(!RB4_BUTTON) {
             while(!RB4_BUTTON);
@@ -66,13 +63,19 @@ void __interrupt() isr() {
     TMR0IF = 0;
     counterTimer0++;
 
-    if (counterTimer0 == 125 * 60) {
+    if (counterTimer0 == 125) {
         counterTimer0 = 0;
+        char json[64];
         
-        measureWindSpeed();
-        measureHumidity();
-        measureTemperature();
+        int lastW = measureWindSpeed();
+        int lastH = measureHumidity();
+        int lastT = measureTemperature();
         
+        sprintf(json,
+                "{ \"W\" : %d, \"H\" : %d, \"T\": %d }",
+                lastW, lastH, lastT);
+        
+        sendStringUART(json);
         TMR1 = 0;
         TMR0 = 0;
     }

@@ -16,7 +16,7 @@ void initADC() {
 int readADC(int channel) {
     // Takes channel bits and ADCON bit
     ADCON0 = channel;
-    sleep(1000);
+    sleep(200);
 
     // Starts converting
     GO = 1;
