@@ -5,6 +5,9 @@
 #define TRUE 1
 #define FALSE 0
 
+// Clock frequency
+#define CLK_FREQ 4000000
+
 // Buzzer
 #define BUZZER PORTCbits.RC1
 
