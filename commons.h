@@ -5,15 +5,11 @@
 #define TRUE 1
 #define FALSE 0
 
+// Buzzer
+#define BUZZER PORTCbits.RC1
+
 // LEDs
-#define RD0_LED PORTDbits.RD0
-#define RD1_LED PORTDbits.RD1
-#define RD2_LED PORTDbits.RD2
-#define RD3_LED PORTDbits.RD3
-#define RD4_LED PORTDbits.RD4
-#define RD5_LED PORTDbits.RD5
-#define RD6_LED PORTDbits.RD6
-#define RD7_LED PORTDbits.RD7
+#define LED_RB7 PORTBbits.RB7
 
 // Buttons
 #define RB3_BUTTON PORTBbits.RB3
@@ -27,6 +23,7 @@
 #define AN2_TEMPERATURE 0x11
 
 void sleep(int miliseconds);
+void warningAlert();
 
 #endif	/* COMMONS_H */
 

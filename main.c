@@ -22,6 +22,13 @@
 #pragma config CP = OFF // Flash Program Memory Code Protection bit
 
 int counterTimer0 = 0;
+int windMeasured = 0;
+int warningFlag = 0;
+int sendingMsg = 0;
+
+int lastW = -1;
+int lastH = -1;
+int lastT = -1;
 
 int main() {
     //int passwordOK = FALSE;
@@ -41,42 +48,79 @@ int main() {
     initTimer0();
     initTimer1();
     
-    while(TRUE) {
-        //if(!RB3_BUTTON) {
-        //    while(!RB3_BUTTON);
-        //    int currentW = getWindPWM();
-        //    setWindSpeed(currentW);
-        //}
-        
+    while(TRUE) {        
         int currentW = getWindPWM();
         setWindSpeed(currentW);
         
-        if(!RB4_BUTTON) {
-            while(!RB4_BUTTON);
+        if(!RB3_BUTTON) {
+            while(!RB3_BUTTON);
             changeTemperature();
+        }
+        
+        if(sendingMsg == 1) {
+            char message[64];
+            
+            // Wind Speeds Range: 0 to xxx
+            // Humidity Range: 0 to 1023
+            // Temperature: 0 to 156
+            int newW = windMeasured;
+            int newH = measureHumidity();
+            int newT = measureTemperature();
+            
+            // Warning situation 1: Wind Gusts
+            if(lastW != -1 && newW >= lastW + 500) {
+                warningFlag = 1;
+                warningAlert();
+                sprintf(message,
+                        "{ \"Warning\" : 1, \"W\" : %d, \"H\" : %d, \"T\": %d }",
+                        newW, newH, newT);
+                sendStringUART(message);
+            // Warning situation 2: Heavy Rainfall
+            } else if(newH > 675) {
+                warningFlag = 1;
+                warningAlert();
+                sprintf(message,
+                        "{ \"Warning\" : 2, \"W\" : %d, \"H\" : %d, \"T\": %d }",
+                        newW, newH, newT);
+                sendStringUART(message);
+                // Warning situation 3: Wildfire Hazard
+            } else if(newT >= 52 && newH <= 337) {
+                warningFlag = 1;
+                warningAlert();
+                sprintf(message,
+                        "{ \"Warning\" : 3, \"W\" : %d, \"H\" : %d, \"T\": %d }",
+                        newW, newH, newT);
+                sendStringUART(message);
+            }
+
+            if (warningFlag == 0) {
+                sprintf(message,
+                        "{ \"W\" : %d, \"H\" : %d, \"T\": %d }",
+                        newW, newH, newT);
+                sendStringUART(message);
+            } else warningFlag = 0;
+
+            lastW = newW;
+            lastH = newH;
+            lastT = newT;
+            sendingMsg = 0;
         }
     }
 }
 
 void __interrupt() isr() {
-    while(!TMR0IF);
-    TMR0IF = 0;
-    counterTimer0++;
+    // while(!TMR0IF);
+    if(TMR0IF == 1) {
+        TMR0IF = 0;
+        counterTimer0++;
 
-    if (counterTimer0 == 125) {
-        counterTimer0 = 0;
-        char json[64];
-        
-        int lastW = measureWindSpeed();
-        int lastH = measureHumidity();
-        int lastT = measureTemperature();
-        
-        sprintf(json,
-                "{ \"W\" : %d, \"H\" : %d, \"T\": %d }",
-                lastW, lastH, lastT);
-        
-        sendStringUART(json);
-        TMR1 = 0;
-        TMR0 = 0;
+        if (counterTimer0 == 125 * 30) {
+            counterTimer0 = 0;
+            sendingMsg = 1;
+            windMeasured = measureWindSpeed();
+            
+            TMR1 = 0;
+            TMR0 = 0;
+        }
     }
 }
