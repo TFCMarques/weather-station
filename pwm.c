@@ -3,7 +3,7 @@
 #include "commons.h"
 #include "uart.h"
 
-void initPWM() {
+void initPWM(void) {
     CCP1CON = 0x0C;
     
     TRISCbits.TRISC0 = 1;
@@ -19,7 +19,7 @@ void initPWM() {
     T2CONbits.TMR2ON = 0;
 }
 
-void startPWM() {
+void startPWM(void) {
     TRISCbits.TRISC2 = 0;
     TRISDbits.TRISD5 = 0;
 
@@ -30,7 +30,7 @@ void startPWM() {
     T2CONbits.TMR2ON = 1;
 }
 
-void stopPWM() {
+void stopPWM(void) {
     CCPR1L = 0;
 }
 

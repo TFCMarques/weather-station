@@ -7,10 +7,8 @@
 void writeByteEEPROM(unsigned int address, unsigned char byte) {
     startI2C();
     
-    while(writeByteI2C(WRITE_ADDR)) restartI2C();
-    
-    writeByteI2C(address>>8);
-    writeByteI2C((unsigned char) address);
+    writeByteI2C(WRITE_ADDR);
+    writeByteI2C(address);
     writeByteI2C(byte);
     
     stopI2C();
@@ -23,7 +21,6 @@ unsigned char readByteEEPROM(unsigned int address) {
 
     while(writeByteI2C(WRITE_ADDR)) restartI2C();
 
-    writeByteI2C(address>>8);
     writeByteI2C((unsigned char) address);
     restartI2C();
     

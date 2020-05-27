@@ -11,9 +11,9 @@
 
 void portLCD(char port);
 void commandLCD(char command);
-void clearLCD();
+void clearLCD(void);
 void setCursorLCD(char line, char column);
-void initLCD();
+void initLCD(void);
 void writeCharLCD(char aux);
 void writeStringLCD(char* string);
 

@@ -1,6 +1,6 @@
 #include <xc.h>
 
-void initInterrupFlags() {
+void initInterrupFlags(void) {
     INTCONbits.TMR0IE = 1;
     INTCONbits.TMR0IF = 0;
     INTCONbits.GIE = 1;

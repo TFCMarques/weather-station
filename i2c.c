@@ -2,7 +2,7 @@
 #include "i2c.h"
 #include "commons.h"
 
-void initI2C() {
+void initI2C(void) {
     SCLK_DIR = 1;
     SDA_DIR = 1;
     
@@ -16,22 +16,22 @@ void initI2C() {
 }
 
 
-void startI2C() {
+void startI2C(void) {
     SEN = 1;
     while(SEN);
 }
 
-void restartI2C() {
+void restartI2C(void) {
     RSEN = 1;
     while(RSEN);
 }
 
-void stopI2C() {
+void stopI2C(void) {
     PEN = 1;
     while(PEN);
 }
 
-void sendAckI2C() {
+void sendAckI2C(void) {
     SSPIF = 0;
     
     // Acknowledge = 0
@@ -40,7 +40,7 @@ void sendAckI2C() {
     while(!SSPIF);
 }
 
-void sendNackI2C() {
+void sendNackI2C(void) {
     SSPIF = 0;
     
     // Not Acknowledge = 1
@@ -59,7 +59,7 @@ char writeByteI2C(unsigned char byte) {
     return ACKSTAT;
 }
 
-char readByteI2C() {
+char readByteI2C(void) {
     RCEN = 1;
     while(!SSPIF);
     SSPIF = 0;

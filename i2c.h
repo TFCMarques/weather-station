@@ -7,14 +7,14 @@
 #define SCLK_DIR TRISC3
 #define SDA_DIR TRISC4
 
-void initI2C();
-void waitMasterI2C();
-void startI2C();
-void restartI2C();
-void stopI2C();
-void sendAckI2C();
-void sendNackI2C();
+void initI2C(void);
+void waitMasterI2C(void);
+void startI2C(void);
+void restartI2C(void);
+void stopI2C(void);
+void sendAckI2C(void);
+void sendNackI2C(void);
 char writeByteI2C(unsigned char byte);
-char readByteI2C();
+char readByteI2C(void);
 
 #endif	/* I2C_H */

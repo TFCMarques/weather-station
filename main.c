@@ -44,15 +44,12 @@ int altHumidityAlert = 514; // 50% of max value
 int altTemperatureAlert = 78; // 50% of max value
 
 int main() {
-    char message[64];
     int passwordOK = FALSE;
     
     initUART();
     initADC();
     initLCD();
     initI2C();
-    initPWM();
-    startPWM();
 
     do {
         clearLCD();
@@ -65,25 +62,33 @@ int main() {
     clearLCD();
     setCursorLCD(0, 0);
     writeStringLCD("> SAD 2019/2020");
-    setCursorLCD(1, 0);
-    writeStringLCD("> Status: Okay");
     
-    //writeByteEEPROM(0x0000, 0x4B); // 0x4B = K
-    //if(readByteEEPROM(0x0000) != 0x4B) return 1;
+    writeByteEEPROM(0x0010, 0x4B); // 0x4B = K
+    if(readByteEEPROM(0x0010) != 0x4B) {
+        setCursorLCD(1, 0);
+        writeStringLCD("> Status: Okay");
+    } else {
+        setCursorLCD(1, 0);
+        writeStringLCD("> Status: NRead");
+    }
     
+    initPWM();
+    startPWM();
     initInterrupFlags();
     initTimer0();
     initTimer1();
     
-    while(TRUE) {        
+    while(TRUE) {
+        char message[64] = {0};
+        
         int currentW = getWindPWM();
         setWindSpeed(currentW);
-        
+
         if(!RB3_BUTTON) {
             while(!RB3_BUTTON);
             changeTemperature();
         }
-        
+
         if(sendingMsg == 1) {
             // Wind Speeds Range: 0 to 19027
             // Humidity Range: 0 to 1023
@@ -91,7 +96,7 @@ int main() {
             int newW = windMeasured;
             int newH = measureHumidity();
             int newT = measureTemperature();
-            
+
             // Warning situation 1: Wind Gusts
             if(lastW != -1 && newW >= windAlert) {
                 warningFlag = 1;
@@ -142,7 +147,7 @@ int main() {
             lastT = newT;
             sendingMsg = 0;
         }
-        
+
         char option = getCharUART();
 
         if(option == 'X' && lastW != -1) {
@@ -170,9 +175,6 @@ int main() {
             altHumidityAlert = aux1;
             altTemperatureAlert = aux2;
         }
-        
-        // Resets message memory
-        memset(message, 0, sizeof(message));
     }
     
     return 0;
@@ -207,7 +209,7 @@ void __interrupt() isr() {
                 extInterruptFlag = 1;
                 TMR0IE = 0;
                 TMR2ON = 0;
-                sleep(100);
+                stopPWM();
             } else {
                 setCursorLCD(1, 0);
                 writeStringLCD("> Status: Okay");
@@ -215,7 +217,6 @@ void __interrupt() isr() {
                 TMR0IF = 0;
                 TMR0IE = 1;
                 TMR2ON = 1;
-                sleep(100);
             }
         }
     }

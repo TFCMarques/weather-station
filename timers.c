@@ -3,7 +3,7 @@
 #include "commons.h"
 
 // Timer0 works as timer
-void initTimer0() {
+void initTimer0(void) {
     OPTION_REGbits.T0CS = 0;
     OPTION_REGbits.PSA = 0;
     OPTION_REGbits.PS0 = 0;
@@ -17,7 +17,7 @@ void initTimer0() {
 }
 
 //Timer1 works as counter
-void initTimer1() {
+void initTimer1(void) {
     T1CONbits.TMR1CS = 1;
     T1CONbits.T1CKPS0 = 0;
     T1CONbits.T1CKPS1 = 0;

@@ -2,7 +2,7 @@
 #include "adc.h"
 #include "commons.h"
 
-void initADC() {
+void initADC(void) {
     // ADC module turned on and CLK is selected
     ADCON0 = 0x00;
 

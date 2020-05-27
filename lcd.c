@@ -28,7 +28,7 @@ void commandLCD(char command) {
     EN = 0;
 }
 
-void clearLCD() {
+void clearLCD(void) {
     commandLCD(0x00);
     commandLCD(0x01);
 }
@@ -46,7 +46,7 @@ void setCursorLCD(char line, char column) {
     commandLCD(aux & 0x0F);
 }
 
-void initLCD() {
+void initLCD(void) {
     TRISEbits.TRISE1 = 0;
     TRISEbits.TRISE2 = 0;
     

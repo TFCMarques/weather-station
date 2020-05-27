@@ -4,7 +4,7 @@
 #include "lcd.h"
 #include "commons.h"
 
-int checkPassword() {
+int checkPassword(void) {
     char* systemPassword = "1234";
     char receivedPassword[5];
 

@@ -7,7 +7,7 @@
 #include "adc.h"
 #include "pwm.h"
 
-int getWindPWM() {
+int getWindPWM(void) {
     return readADC(AN0_WIND);
 }
 
@@ -15,19 +15,19 @@ void setWindSpeed(int windPot) {
     setDutyCyclePWM(windPot);
 }
 
-int measureWindSpeed() {
+int measureWindSpeed(void) {
     return ((TMR1H<<8) + TMR1L);
 }
 
-int measureHumidity() {
+int measureHumidity(void) {
     return readADC(AN1_HUMIDITY);
 }
 
-int measureTemperature() {
+int measureTemperature(void) {
     return readADC(AN2_TEMPERATURE);
 }
 
-void changeTemperature() {
+void changeTemperature(void) {
     //TRISCbits.TRISC5 = 0;
     
     if(PORTCbits.RC5 == 0) {

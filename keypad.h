@@ -10,8 +10,8 @@
 #define ROW2 PORTDbits.RD2
 #define ROW1 PORTDbits.RD3
 
-void initKeypad();
+void initKeypad(void);
 void checkingRow(int row);
-char getPressedKey();
+char getPressedKey(void);
 
 #endif	/* KEYPAD_H */

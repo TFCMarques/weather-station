@@ -29,7 +29,7 @@
 #define AN2_TEMPERATURE 0x11
 
 void sleep(int miliseconds);
-void warningAlert();
+void warningAlert(void);
 
 #endif	/* COMMONS_H */
 

@@ -7,7 +7,7 @@
 #include "commons.h"
 #include "uart.h"
 
-void initKeypad() {
+void initKeypad(void) {
     COLUMN1 = 0;
     COLUMN2 = 0;
     COLUMN3 = 0;
@@ -37,7 +37,7 @@ void checkingRow(int row) {
     }
 }
 
-char getPressedKey() {
+char getPressedKey(void) {
     char key = 'q';
     
     while (key == 'q') {

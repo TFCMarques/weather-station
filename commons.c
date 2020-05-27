@@ -7,7 +7,7 @@ void sleep(int miliseconds) {
     }
 }
 
-void warningAlert() {
+void warningAlert(void) {
     int stateLED = LED_RB7;
     int stateTRISB7 = TRISBbits.TRISB7;
     int stateTRISC1 = TRISCbits.TRISC1;

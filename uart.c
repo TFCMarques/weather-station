@@ -2,7 +2,7 @@
 #include "uart.h"
 #include "commons.h"
 
-void initUART() {
+void initUART(void) {
     // Setting I/O pins for UART
     TRISC=0x80;
 
@@ -32,14 +32,14 @@ void sendStringUART(const char* string) {
     addNewline();
 }
 
-char getCharUART() {
+char getCharUART(void) {
     if(RCIF) {
         while(!RCIF);
         return RCREG;
     } else return 0;
 }
 
-void addNewline() {
+void addNewline(void) {
     sendCharUART('\n');
 	sendCharUART('\r');
 }
