@@ -87,13 +87,3 @@ void writeCharLCD(char aux) {
 void writeStringLCD(char* string) {
     while(*string) writeCharLCD(*string++);
 }
-
-void shiftRightLCD() {
-    commandLCD(0x01);
-    commandLCD(0x0C);
-}
-
-void shiftLeftLCD() {
-    commandLCD(0x01);
-    commandLCD(0x08);
-}

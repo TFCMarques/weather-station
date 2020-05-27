@@ -16,8 +16,6 @@ void setCursorLCD(char line, char column);
 void initLCD();
 void writeCharLCD(char aux);
 void writeStringLCD(char* string);
-void shiftRightLCD();
-void shiftLeftLCD();
 
 #endif	/* LCD_H */
 

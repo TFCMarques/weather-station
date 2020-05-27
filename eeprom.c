@@ -4,28 +4,30 @@
 
 #include "uart.h"
 
-void writeByteEEPROM(int address, char byte) {
+void writeByteEEPROM(unsigned int address, unsigned char byte) {
     startI2C();
     
+    while(writeByteI2C(WRITE_ADDR)) restartI2C();
+    
     writeByteI2C(address>>8);
-    writeByteI2C((char) address);
+    writeByteI2C((unsigned char) address);
     writeByteI2C(byte);
     
     stopI2C();
 }
 
-char readByteEEPROM(int address) {
-    char byte = 0;
+unsigned char readByteEEPROM(unsigned int address) {
+    unsigned char byte = 0;
     
     startI2C();
 
-    while(writeByteI2C(EEPROM_ADDR) == 1) restartI2C();
+    while(writeByteI2C(WRITE_ADDR)) restartI2C();
 
     writeByteI2C(address>>8);
-    writeByteI2C((char) address);
+    writeByteI2C((unsigned char) address);
     restartI2C();
     
-    writeByteI2C(EEPROM_ADDR + 1);
+    writeByteI2C(READ_ADDR);
     byte = readByteI2C();
     sendNackI2C();
     stopI2C();

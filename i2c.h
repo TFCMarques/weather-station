@@ -8,12 +8,13 @@
 #define SDA_DIR TRISC4
 
 void initI2C();
+void waitMasterI2C();
 void startI2C();
 void restartI2C();
 void stopI2C();
 void sendAckI2C();
 void sendNackI2C();
-int writeByteI2C(char byte);
+char writeByteI2C(unsigned char byte);
 char readByteI2C();
 
 #endif	/* I2C_H */

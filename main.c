@@ -48,7 +48,7 @@ int main() {
     initUART();
     initADC();
     initLCD();
-//    initI2C();
+    initI2C();
     initPWM();
     startPWM();
 
@@ -66,8 +66,8 @@ int main() {
     setCursorLCD(1, 0);
     writeStringLCD("> Status: Okay");
     
-//    writeByteEEPROM(0x0000, 'K');
-//    if(readByteEEPROM(0x0000) != 'K') return 1;
+    //writeByteEEPROM(0x0000, 0x4B); // 0x4B = K
+    //if(readByteEEPROM(0x000) != 0x4B) return 1;
     
     initInterrupFlags();
     initTimer0();
