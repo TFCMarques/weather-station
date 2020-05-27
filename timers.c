@@ -25,10 +25,4 @@ void initTimer1() {
     TMR1 = 0;
     
     T1CONbits.TMR1ON = 1;
-}    
-
-void initInterrupFlags() {
-    INTCONbits.TMR0IE = 1;
-    INTCONbits.TMR0IF = 0;
-    INTCONbits.GIE = 1;
 }

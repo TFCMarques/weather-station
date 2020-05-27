@@ -15,6 +15,7 @@
       <itemPath>i2c.h</itemPath>
       <itemPath>lcd.h</itemPath>
       <itemPath>eeprom.h</itemPath>
+      <itemPath>interrupts.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -35,6 +36,7 @@
       <itemPath>i2c.c</itemPath>
       <itemPath>lcd.c</itemPath>
       <itemPath>eeprom.c</itemPath>
+      <itemPath>interrupts.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

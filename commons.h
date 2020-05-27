@@ -20,6 +20,9 @@
 #define RB5_BUTTON PORTBbits.RB5
 #define RA5_BUTTON PORTAbits.RA5
 
+// Interrup Button
+#define INT_BUTTON PORTBbits.RB0
+
 // Analog Channels with ADON
 #define AN0_WIND 0x01
 #define AN1_HUMIDITY 0x09

@@ -5,15 +5,16 @@
 
 // Custom Libraries
 #include "adc.h"
-#include "uart.h"
 #include "pwm.h"
-#include "commons.h"
-#include "timers.h"
-#include "password.h"
-#include "measures.h"
 #include "lcd.h"
 #include "i2c.h"
+#include "uart.h"
+#include "timers.h"
 #include "eeprom.h"
+#include "commons.h"
+#include "password.h"
+#include "measures.h"
+#include "interrupts.h"
 
 #pragma config FOSC = HS // Oscillator Selection bits (HS oscillator)
 #pragma config WDTE = OFF // Watchdog Timer Enable bit
@@ -28,6 +29,7 @@ int counterTimer0 = 0;
 int windMeasured = 0;
 int warningFlag = 0;
 int sendingMsg = 0;
+int extInterruptFlag = 0;
 
 int lastW = -1;
 int lastH = -1;
@@ -67,7 +69,7 @@ int main() {
     writeStringLCD("> Status: Okay");
     
     //writeByteEEPROM(0x0000, 0x4B); // 0x4B = K
-    //if(readByteEEPROM(0x000) != 0x4B) return 1;
+    //if(readByteEEPROM(0x0000) != 0x4B) return 1;
     
     initInterrupFlags();
     initTimer0();
@@ -177,7 +179,7 @@ int main() {
 }
 
 void __interrupt() isr() {
-    if(TMR0IF == 1) {
+    if(TMR0IF) {
         TMR0IF = 0;
         counterTimer0++;
         
@@ -190,6 +192,31 @@ void __interrupt() isr() {
             
             TMR1 = 0;
             TMR0 = 0;
+        }
+    }
+    
+    if(INTF) {
+        INTF = 0;
+        
+        if(!INT_BUTTON) {
+            while(!INT_BUTTON);
+            
+            if(!extInterruptFlag) {
+                setCursorLCD(1, 0);
+                writeStringLCD("> Status: Stop");
+                extInterruptFlag = 1;
+                TMR0IE = 0;
+                TMR2ON = 0;
+                sleep(100);
+            } else {
+                setCursorLCD(1, 0);
+                writeStringLCD("> Status: Okay");
+                extInterruptFlag = 0;
+                TMR0IF = 0;
+                TMR0IE = 1;
+                TMR2ON = 1;
+                sleep(100);
+            }
         }
     }
 }
