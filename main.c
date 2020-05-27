@@ -24,9 +24,6 @@
 #pragma config WRT = OFF // Flash Program Memory Write Enable bits
 #pragma config CP = OFF // Flash Program Memory Code Protection bit
 
-void changeAlerts();
-void sendCurrentMeasures();
-
 int counterTimer0 = 0;
 int windMeasured = 0;
 int warningFlag = 0;
@@ -142,34 +139,34 @@ int main() {
             lastH = newH;
             lastT = newT;
             sendingMsg = 0;
-        } else {
-            char option = getCharUART();
+        }
         
-            if(option == 'X' && lastW != -1) {
-                int newH = measureHumidity();
-                int newT = measureTemperature();
+        char option = getCharUART();
 
-                sprintf(message,
-                        "{ \"W\" : %d, \"H\" : %d, \"T\": %d }",
-                        lastW, newH, newT);
-                sendStringUART(message);
-                sleep(100);
+        if(option == 'X' && lastW != -1) {
+            int newH = measureHumidity();
+            int newT = measureTemperature();
 
-                lastH = newH;
-                lastT = newT;
-            } else if(option == 'Y') {
-                int aux0 = windAlert;
-                int aux1 = humidityAlert;
-                int aux2 = temperatureAlert;
+            sprintf(message,
+                    "{ \"W\" : %d, \"H\" : %d, \"T\": %d }",
+                    lastW, newH, newT);
+            sendStringUART(message);
+            sleep(100);
 
-                windAlert = altWindAlert;
-                humidityAlert = altHumidityAlert;
-                temperatureAlert = altTemperatureAlert;
+            lastH = newH;
+            lastT = newT;
+        } else if(option == 'Y') {
+            int aux0 = windAlert;
+            int aux1 = humidityAlert;
+            int aux2 = temperatureAlert;
 
-                altWindAlert = aux0;
-                altHumidityAlert = aux1;
-                altTemperatureAlert = aux2;
-            }
+            windAlert = altWindAlert;
+            humidityAlert = altHumidityAlert;
+            temperatureAlert = altTemperatureAlert;
+
+            altWindAlert = aux0;
+            altHumidityAlert = aux1;
+            altTemperatureAlert = aux2;
         }
         
         // Resets message memory
@@ -183,8 +180,10 @@ void __interrupt() isr() {
     if(TMR0IF == 1) {
         TMR0IF = 0;
         counterTimer0++;
-
-        if (counterTimer0 == 125 * 60) {
+        
+        // Using aprox. 30 seconds
+        // 60 seconds overflows fan speed counter
+        if (counterTimer0 == 125 * 30) {
             counterTimer0 = 0;
             sendingMsg = 1;
             windMeasured = measureWindSpeed();
