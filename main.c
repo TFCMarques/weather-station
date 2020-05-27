@@ -24,6 +24,9 @@
 #pragma config WRT = OFF // Flash Program Memory Write Enable bits
 #pragma config CP = OFF // Flash Program Memory Code Protection bit
 
+void changeAlerts();
+void sendCurrentMeasures();
+
 int counterTimer0 = 0;
 int windMeasured = 0;
 int warningFlag = 0;
@@ -33,23 +36,42 @@ int lastW = -1;
 int lastH = -1;
 int lastT = -1;
 
+int windAlert = 12557; // 66% of max value
+int humidityAlert = 675; // 66% of max value
+int temperatureAlert = 102; // 66% of max value
+
+int altWindAlert = 9514; // 50% of max value
+int altHumidityAlert = 514; // 50% of max value
+int altTemperatureAlert = 78; // 50% of max value
+
 int main() {
-    //int passwordOK = FALSE;
+    char message[64];
+    int passwordOK = FALSE;
     
     initUART();
     initADC();
-    //initI2C();
+    initLCD();
+//    initI2C();
     initPWM();
     startPWM();
-    
-    //do {
-    //    sendStringUART("Insert Password:");
-    //    passwordOK = checkPassword();
-    //    sleep(100);
-    //} while(!passwordOK);
-    
-    //writeByteEEPROM(0x0000, 'K');
 
+    do {
+        clearLCD();
+        setCursorLCD(0, 0);
+        writeStringLCD("Password: ");
+        passwordOK = checkPassword();
+        sleep(500);
+    } while(!passwordOK);
+    
+    clearLCD();
+    setCursorLCD(0, 0);
+    writeStringLCD("> SAD 2019/2020");
+    setCursorLCD(1, 0);
+    writeStringLCD("> Status: Okay");
+    
+//    writeByteEEPROM(0x0000, 'K');
+//    if(readByteEEPROM(0x0000) != 'K') return 1;
+    
     initInterrupFlags();
     initTimer0();
     initTimer1();
@@ -64,37 +86,41 @@ int main() {
         }
         
         if(sendingMsg == 1) {
-            char message[64];
-            
             // Wind Speeds Range: 0 to 19027
             // Humidity Range: 0 to 1023
-            // Temperature Range: 0 to 156
+            // Temperature Range: 0 to 157
             int newW = windMeasured;
             int newH = measureHumidity();
             int newT = measureTemperature();
             
             // Warning situation 1: Wind Gusts
-            if(lastW != -1 && newW >= lastW + 500) {
+            if(lastW != -1 && newW >= windAlert) {
                 warningFlag = 1;
                 warningAlert();
+                setCursorLCD(1, 0);
+                writeStringLCD("> Status: Warn");
                 sprintf(message,
                         "{ \"Warning\" : 1, \"W\" : %d, \"H\" : %d, \"T\": %d }",
                         newW, newH, newT);
                 sendStringUART(message);
                 sleep(100);
             // Warning situation 2: Heavy Rainfall
-            } else if(newH > 675) {
+            } else if(newH > humidityAlert) {
                 warningFlag = 1;
                 warningAlert();
+                setCursorLCD(1, 0);
+                writeStringLCD("> Status: Warn");
                 sprintf(message,
                         "{ \"Warning\" : 2, \"W\" : %d, \"H\" : %d, \"T\": %d }",
                         newW, newH, newT);
                 sendStringUART(message);
                 sleep(100);
                 // Warning situation 3: Wildfire Hazard
-            } else if(newW >= 12557 && newH <= 337 && newT >= 52) {
+            } else if(newW >= windAlert && newH <= humidityAlert && newT >= temperatureAlert) {
                 warningFlag = 1;
                 warningAlert();
+                setCursorLCD(1, 0);
+                writeStringLCD("> Status: Warn");
                 sprintf(message,
                         "{ \"Warning\" : 3, \"W\" : %d, \"H\" : %d, \"T\": %d }",
                         newW, newH, newT);
@@ -103,6 +129,8 @@ int main() {
             }
 
             if (warningFlag == 0) {
+                setCursorLCD(1, 0);
+                writeStringLCD("> Status: Okay");
                 sprintf(message,
                         "{ \"W\" : %d, \"H\" : %d, \"T\": %d }",
                         newW, newH, newT);
@@ -114,8 +142,41 @@ int main() {
             lastH = newH;
             lastT = newT;
             sendingMsg = 0;
+        } else {
+            char option = getCharUART();
+        
+            if(option == 'X' && lastW != -1) {
+                int newH = measureHumidity();
+                int newT = measureTemperature();
+
+                sprintf(message,
+                        "{ \"W\" : %d, \"H\" : %d, \"T\": %d }",
+                        lastW, newH, newT);
+                sendStringUART(message);
+                sleep(100);
+
+                lastH = newH;
+                lastT = newT;
+            } else if(option == 'Y') {
+                int aux0 = windAlert;
+                int aux1 = humidityAlert;
+                int aux2 = temperatureAlert;
+
+                windAlert = altWindAlert;
+                humidityAlert = altHumidityAlert;
+                temperatureAlert = altTemperatureAlert;
+
+                altWindAlert = aux0;
+                altHumidityAlert = aux1;
+                altTemperatureAlert = aux2;
+            }
         }
+        
+        // Resets message memory
+        memset(message, 0, sizeof(message));
     }
+    
+    return 0;
 }
 
 void __interrupt() isr() {

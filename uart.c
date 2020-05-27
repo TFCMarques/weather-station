@@ -7,6 +7,7 @@ void initUART() {
     TRISC=0x80;
 
     // Initialize SPBRG with 9,6kHz BR with BRGH as fast BR
+    // SPBRG = ((CLK_FREQ / 16) / BR) - 1 = 25
     BRGH = TRUE;
     SPBRG = 25;
 
@@ -32,8 +33,10 @@ void sendStringUART(const char* string) {
 }
 
 char getCharUART() {
-    while(!RCIF);
-    return RCREG;
+    if(RCIF) {
+        while(!RCIF);
+        return RCREG;
+    } else return 0;
 }
 
 void addNewline() {

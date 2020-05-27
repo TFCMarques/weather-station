@@ -1,7 +1,7 @@
 #include <xc.h>
 #include <string.h>
 #include "keypad.h"
-#include "uart.h"
+#include "lcd.h"
 #include "commons.h"
 
 int checkPassword() {
@@ -12,17 +12,17 @@ int checkPassword() {
     sleep(100);
     for(int i = 0; i < 4; i++) {
         receivedPassword[i] = getPressedKey();
-        sendCharUART(receivedPassword[i]);
+        writeCharLCD('*');
     }
     
-    addNewline();
+    setCursorLCD(1, 0);
     receivedPassword[4] = '\0';
     
     if (strcmp(receivedPassword, systemPassword) == 0) {
-        sendStringUART("Correct password.");
+        writeStringLCD("> Correct");
         return TRUE;
     } else {
-        sendStringUART("Wrong password.");
+        writeStringLCD("> Wrong");
         return FALSE;
     }
 }
