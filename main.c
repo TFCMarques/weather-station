@@ -69,7 +69,7 @@ int main() {
         writeStringLCD("> Status: Okay");
     } else {
         setCursorLCD(1, 0);
-        writeStringLCD("> Status: NRead");
+        writeStringLCD("> Status: NotR");
     }
     
     initPWM();

@@ -20,7 +20,7 @@
 #define RB5_BUTTON PORTBbits.RB5
 #define RA5_BUTTON PORTAbits.RA5
 
-// Interrup Button
+// Interrupt Button
 #define INT_BUTTON PORTBbits.RB0
 
 // Analog Channels with ADON
