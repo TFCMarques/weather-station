@@ -4,6 +4,9 @@
 
 // Timer0 works as timer
 void initTimer0(void) {
+   // T = 1s = 1000000us = 32 (Prescaler) * 250 (256 - TMR0) * 125 (counter)
+    // To get T = 60s ----> counter * 60
+    
     OPTION_REGbits.T0CS = 0;
     OPTION_REGbits.PSA = 0;
     OPTION_REGbits.PS0 = 0;
@@ -11,9 +14,6 @@ void initTimer0(void) {
     OPTION_REGbits.PS2 = 1;
     
     TMR0 = 6; // counts (256 - 6) times
-    
-    // T = 1s = 1000000us = 32 (Prescaler) * 250 (256 - TMR0) * 125 (counter)
-    // To get T = 60s ----> counter * 60
 }
 
 //Timer1 works as counter

@@ -193,7 +193,7 @@ void __interrupt() isr() {
             windMeasured = measureWindSpeed();
             
             TMR1 = 0;
-            TMR0 = 0;
+            TMR0 = 6;
         }
     }
     
