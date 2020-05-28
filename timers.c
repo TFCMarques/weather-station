@@ -4,7 +4,7 @@
 
 // Timer0 works as timer
 void initTimer0(void) {
-   // T = 1s = 1000000us = 32 (Prescaler) * 250 (256 - TMR0) * 125 (counter)
+   // T = 1s = 1000000us = 32 (PS) * 250 (256 - TMR0) * 125 (cnt)
     // To get T = 60s ----> counter * 60
     
     OPTION_REGbits.T0CS = 0;
