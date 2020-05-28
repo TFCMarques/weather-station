@@ -61,6 +61,8 @@ char writeByteI2C(unsigned char byte) {
 
 char readByteI2C(void) {
     RCEN = 1;
+    while(RCEN);
+    
     while(!SSPIF);
     SSPIF = 0;
     

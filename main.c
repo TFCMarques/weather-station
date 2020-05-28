@@ -63,8 +63,8 @@ int main() {
     setCursorLCD(0, 0);
     writeStringLCD("> SAD 2019/2020");
     
-    writeByteEEPROM(0x0020, 0x4B); // 0x4B = K
-    if(readByteEEPROM(0x0020) == 0x4B) {
+    writeByteEEPROM(0x0010, 0x4B); // 0x4B = K
+    if(readByteEEPROM(0x0010) == 0x4B) {
         setCursorLCD(1, 0);
         writeStringLCD("> Status: Okay");
     } else {

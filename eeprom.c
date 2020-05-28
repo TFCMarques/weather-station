@@ -25,7 +25,6 @@ unsigned char readByteEEPROM(unsigned int address) {
     restartI2C();
     
     writeByteI2C(READ_ADDR);
-    writeByteI2C(address);
     byte = readByteI2C();
     sendNackI2C();
     stopI2C();
